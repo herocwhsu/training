@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	companysvc "github.com/herocwhsu/training/utexample/internal/service/company"
+	"github.com/herocwhsu/training/utexample/internal/service/companysvc"
 	"github.com/herocwhsu/training/utexample/mocks"
 
 	"github.com/herocwhsu/training/utexample/internal/domain"

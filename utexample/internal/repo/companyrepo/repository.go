@@ -3,7 +3,7 @@ package companyrepo
 import (
 	"context"
 
-	companydao "github.com/herocwhsu/training/utexample/internal/dao/company"
+	"github.com/herocwhsu/training/utexample/internal/dao/companydao"
 	"github.com/herocwhsu/training/utexample/internal/domain"
 )
 

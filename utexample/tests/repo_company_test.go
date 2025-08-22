@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	companyrepo "github.com/herocwhsu/training/utexample/internal/repo/company"
+	"github.com/herocwhsu/training/utexample/internal/repo/companyrepo"
 	"github.com/herocwhsu/training/utexample/mocks"
 
 	"github.com/golang/mock/gomock"

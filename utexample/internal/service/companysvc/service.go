@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/herocwhsu/training/utexample/internal/domain"
-	companyrepo "github.com/herocwhsu/training/utexample/internal/repo/company"
+	"github.com/herocwhsu/training/utexample/internal/repo/companyrepo"
 )
 
 //go:generate mockgen -destination=../../../mocks/mock_service.go -package=mocks github.com/herocwhsu/training/utexample/internal/service/company CompanyService

@@ -4,12 +4,11 @@ import (
 	"context"
 	"testing"
 
-	companyctl "github.com/herocwhsu/training/utexample/internal/controller/company"
 	"github.com/herocwhsu/training/utexample/mocks"
 
-	"github.com/herocwhsu/training/utexample/internal/domain"
-
 	"github.com/golang/mock/gomock"
+	"github.com/herocwhsu/training/utexample/internal/controller/companyctl"
+	"github.com/herocwhsu/training/utexample/internal/domain"
 	"github.com/stretchr/testify/assert"
 )
 

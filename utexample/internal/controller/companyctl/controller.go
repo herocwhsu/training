@@ -3,7 +3,7 @@ package companyctl
 import (
 	"context"
 
-	companysvc "github.com/herocwhsu/training/utexample/internal/service/company"
+	"github.com/herocwhsu/training/utexample/internal/service/companysvc"
 )
 
 type CompanyInfo struct {
