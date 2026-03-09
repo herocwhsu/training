@@ -20,4 +20,10 @@ func TestCompany_Validate(t *testing.T) {
 		err := c.Validate()
 		assert.Error(t, err)
 	})
+
+	t.Run("ShouldFail_WhenNameMissing", func(t *testing.T) {
+		c := &domain.Company{ID: "cmp_3", Email: "ok@co.com", Name: ""}
+		err := c.Validate()
+		assert.Error(t, err)
+	})
 }

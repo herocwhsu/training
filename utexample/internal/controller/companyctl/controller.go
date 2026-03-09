@@ -7,6 +7,7 @@ import (
 )
 
 type CompanyInfo struct {
+	ID    string
 	Email string
 	Name  string
 }
@@ -29,5 +30,5 @@ func (c *Controller) GetCompany(ctx context.Context, companyID string) (*Company
 	if err != nil {
 		return nil, err
 	}
-	return &CompanyInfo{Email: ent.Email, Name: ent.Name}, nil
+	return &CompanyInfo{ID: ent.ID, Email: ent.Email, Name: ent.Name}, nil
 }

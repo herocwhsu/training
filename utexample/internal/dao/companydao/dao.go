@@ -1,8 +1,11 @@
 package companydao
 
-import "context"
+import (
+	"context"
+	"errors"
+)
 
-//go:generate mockgen -destination=../../../mocks/mock_dao.go -package=mocks github.com/herocwhsu/training/utexample/internal/dao/company CompanyDAO
+//go:generate mockgen -destination=../../../mocks/mock_dao.go -package=mocks github.com/herocwhsu/training/utexample/internal/dao/companydao CompanyDAO
 
 type CompanyDAO interface {
 	Insert(ctx context.Context, email, name string) (string, error)
@@ -24,7 +27,7 @@ func (d *RDSCompanyDAO) Insert(ctx context.Context, email, name string) (string,
 func (d *RDSCompanyDAO) FindByID(ctx context.Context, id string) (string, string, error) {
 	// TODO: implement DB select
 	if id == "cmp_404" {
-		return "", "", context.Canceled // just a stub error
+		return "", "", errors.New("company not found")
 	}
 	return "team@example.com", "Example Inc", nil
 }

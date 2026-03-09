@@ -7,7 +7,7 @@ import (
 	"github.com/herocwhsu/training/utexample/internal/repo/companyrepo"
 )
 
-//go:generate mockgen -destination=../../../mocks/mock_service.go -package=mocks github.com/herocwhsu/training/utexample/internal/service/company CompanyService
+//go:generate mockgen -destination=../../../mocks/mock_service.go -package=mocks github.com/herocwhsu/training/utexample/internal/service/companysvc CompanyService
 
 type CompanyService interface {
 	CreateCompany(ctx context.Context, email, name string) (string, error)
@@ -23,7 +23,10 @@ func New(repo companyrepo.CompanyRepository) CompanyService {
 }
 
 func (s *companyService) CreateCompany(ctx context.Context, email, name string) (string, error) {
-	// potential business rules before creating
+	c := &domain.Company{Email: email, Name: name}
+	if err := c.Validate(); err != nil {
+		return "", err
+	}
 	return s.repo.Create(ctx, email, name)
 }
 

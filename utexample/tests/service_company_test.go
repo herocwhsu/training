@@ -2,6 +2,7 @@ package tests
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/herocwhsu/training/utexample/internal/service/companysvc"
@@ -35,7 +36,7 @@ func TestService_CreateCompany(t *testing.T) {
 		mockRepo := mocks.NewMockCompanyRepository(ctrl)
 		svc := companysvc.New(mockRepo)
 
-		mockRepo.EXPECT().Create(gomock.Any(), "bad@co.com", "Bad").Return("", context.DeadlineExceeded)
+		mockRepo.EXPECT().Create(gomock.Any(), "bad@co.com", "Bad").Return("", errors.New("repo error"))
 
 		id, err := svc.CreateCompany(context.Background(), "bad@co.com", "Bad")
 		assert.Error(t, err)
@@ -66,7 +67,7 @@ func TestService_GetCompany(t *testing.T) {
 		mockRepo := mocks.NewMockCompanyRepository(ctrl)
 		svc := companysvc.New(mockRepo)
 
-		mockRepo.EXPECT().Get(gomock.Any(), "cmp_404").Return(nil, context.Canceled)
+		mockRepo.EXPECT().Get(gomock.Any(), "cmp_404").Return(nil, errors.New("repo error"))
 
 		got, err := svc.GetCompany(context.Background(), "cmp_404")
 		assert.Error(t, err)

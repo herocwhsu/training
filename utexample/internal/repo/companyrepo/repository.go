@@ -7,7 +7,7 @@ import (
 	"github.com/herocwhsu/training/utexample/internal/domain"
 )
 
-//go:generate mockgen -destination=../../../mocks/mock_repository.go -package=mocks github.com/herocwhsu/training/utexample/internal/repo/company CompanyRepository
+//go:generate mockgen -destination=../../../mocks/mock_repository.go -package=mocks github.com/herocwhsu/training/utexample/internal/repo/companyrepo CompanyRepository
 
 type CompanyRepository interface {
 	Create(ctx context.Context, email, name string) (string, error)

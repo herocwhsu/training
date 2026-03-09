@@ -2,6 +2,7 @@ package tests
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/herocwhsu/training/utexample/internal/repo/companyrepo"
@@ -33,7 +34,7 @@ func TestRepository_Create(t *testing.T) {
 		mockDAO := mocks.NewMockCompanyDAO(ctrl)
 		repo := companyrepo.New(mockDAO)
 
-		mockDAO.EXPECT().Insert(gomock.Any(), "bad@b.com", "Bad").Return("", context.DeadlineExceeded)
+		mockDAO.EXPECT().Insert(gomock.Any(), "bad@b.com", "Bad").Return("", errors.New("db error"))
 
 		id, err := repo.Create(context.Background(), "bad@b.com", "Bad")
 		assert.Error(t, err)
@@ -65,7 +66,7 @@ func TestRepository_Get(t *testing.T) {
 		mockDAO := mocks.NewMockCompanyDAO(ctrl)
 		repo := companyrepo.New(mockDAO)
 
-		mockDAO.EXPECT().FindByID(gomock.Any(), "cmp_404").Return("", "", context.Canceled)
+		mockDAO.EXPECT().FindByID(gomock.Any(), "cmp_404").Return("", "", errors.New("db error"))
 
 		ent, err := repo.Get(context.Background(), "cmp_404")
 		assert.Error(t, err)

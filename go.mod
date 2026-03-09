@@ -1,6 +1,6 @@
 module github.com/herocwhsu/training
 
-go 1.25.0
+go 1.25.5
 
 require (
 	github.com/golang/mock v1.6.0

@@ -2,6 +2,7 @@ package tests
 
 import (
 	"context"
+	"errors"
 	"testing"
 
 	"github.com/herocwhsu/training/utexample/mocks"
@@ -36,7 +37,7 @@ func TestController_CreateCompany(t *testing.T) {
 		c := companyctl.New(mockSvc)
 
 		in := companyctl.CompanyInfo{Email: "bad@b.com", Name: "BadCo"}
-		mockSvc.EXPECT().CreateCompany(gomock.Any(), "bad@b.com", "BadCo").Return("", context.DeadlineExceeded)
+		mockSvc.EXPECT().CreateCompany(gomock.Any(), "bad@b.com", "BadCo").Return("", errors.New("service error"))
 
 		id, err := c.CreateCompany(context.Background(), in)
 		assert.Error(t, err)
@@ -57,7 +58,7 @@ func TestController_GetCompany(t *testing.T) {
 
 		out, err := c.GetCompany(context.Background(), "cmp_2")
 		assert.Nil(t, err)
-		assert.Equal(t, &companyctl.CompanyInfo{Email: "x@y.com", Name: "X Corp"}, out)
+		assert.Equal(t, &companyctl.CompanyInfo{ID: "cmp_2", Email: "x@y.com", Name: "X Corp"}, out)
 	})
 
 	t.Run("ShouldFail_WhenServiceErrors", func(t *testing.T) {
@@ -67,7 +68,7 @@ func TestController_GetCompany(t *testing.T) {
 		mockSvc := mocks.NewMockCompanyService(ctrl)
 		c := companyctl.New(mockSvc)
 
-		mockSvc.EXPECT().GetCompany(gomock.Any(), "cmp_404").Return(nil, context.Canceled)
+		mockSvc.EXPECT().GetCompany(gomock.Any(), "cmp_404").Return(nil, errors.New("service error"))
 
 		out, err := c.GetCompany(context.Background(), "cmp_404")
 		assert.Error(t, err)
