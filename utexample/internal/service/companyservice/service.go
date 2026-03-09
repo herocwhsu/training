@@ -1,4 +1,4 @@
-package companysvc
+package companyservice
 
 import (
 	"context"
@@ -7,7 +7,7 @@ import (
 	"github.com/herocwhsu/training/utexample/internal/repo/companyrepo"
 )
 
-//go:generate mockgen -destination=../../../mocks/mock_service.go -package=mocks github.com/herocwhsu/training/utexample/internal/service/companysvc CompanyService
+//go:generate mockgen -destination=../../../mocks/mock_service.go -package=mocks github.com/herocwhsu/training/utexample/internal/service/companyservice CompanyService
 
 type CompanyService interface {
 	CreateCompany(ctx context.Context, email, name string) (string, error)

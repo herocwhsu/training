@@ -13,7 +13,7 @@ Each layer depends only on the interface defined by the layer below it, never on
 │  Controller  (companyctl)               │  Maps HTTP/input DTOs ↔ service calls
 │    depends on ▼ CompanyService          │
 ├─────────────────────────────────────────┤
-│  Service     (companysvc)               │  Holds business rules / validation
+│  Service     (companyservice)               │  Holds business rules / validation
 │    depends on ▼ CompanyRepository       │
 ├─────────────────────────────────────────┤
 │  Repository  (companyrepo)              │  Builds domain objects from raw data
@@ -36,7 +36,7 @@ utexample/
 │   │   └── dao.go              # CompanyDAO interface + RDS stub
 │   ├── repo/companyrepo/
 │   │   └── repository.go       # CompanyRepository interface + implementation
-│   ├── service/companysvc/
+│   ├── service/companyservice/
 │   │   └── service.go          # CompanyService interface + implementation
 │   └── controller/companyctl/
 │       └── controller.go       # Controller struct + CompanyInfo DTO
@@ -89,7 +89,7 @@ Mocks are generated with [mockgen](https://github.com/golang/mock). After changi
 # From the repo root
 go generate ./utexample/internal/dao/companydao/...
 go generate ./utexample/internal/repo/companyrepo/...
-go generate ./utexample/internal/service/companysvc/...
+go generate ./utexample/internal/service/companyservice/...
 ```
 
 Or regenerate everything at once:

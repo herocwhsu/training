@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/herocwhsu/training/utexample/internal/service/companysvc"
+	"github.com/herocwhsu/training/utexample/internal/service/companyservice"
 	"github.com/herocwhsu/training/utexample/mocks"
 
 	"github.com/herocwhsu/training/utexample/internal/domain"
@@ -20,7 +20,7 @@ func TestService_CreateCompany(t *testing.T) {
 		defer ctrl.Finish()
 
 		mockRepo := mocks.NewMockCompanyRepository(ctrl)
-		svc := companysvc.New(mockRepo)
+		svc := companyservice.New(mockRepo)
 
 		mockRepo.EXPECT().Create(gomock.Any(), "mail@co.com", "Co").Return("cmp_2", nil)
 
@@ -34,7 +34,7 @@ func TestService_CreateCompany(t *testing.T) {
 		defer ctrl.Finish()
 
 		mockRepo := mocks.NewMockCompanyRepository(ctrl)
-		svc := companysvc.New(mockRepo)
+		svc := companyservice.New(mockRepo)
 
 		mockRepo.EXPECT().Create(gomock.Any(), "bad@co.com", "Bad").Return("", errors.New("repo error"))
 
@@ -50,7 +50,7 @@ func TestService_GetCompany(t *testing.T) {
 		defer ctrl.Finish()
 
 		mockRepo := mocks.NewMockCompanyRepository(ctrl)
-		svc := companysvc.New(mockRepo)
+		svc := companyservice.New(mockRepo)
 
 		ent := &domain.Company{ID: "cmp_3", Email: "z@z.com", Name: "Zed"}
 		mockRepo.EXPECT().Get(gomock.Any(), "cmp_3").Return(ent, nil)
@@ -65,7 +65,7 @@ func TestService_GetCompany(t *testing.T) {
 		defer ctrl.Finish()
 
 		mockRepo := mocks.NewMockCompanyRepository(ctrl)
-		svc := companysvc.New(mockRepo)
+		svc := companyservice.New(mockRepo)
 
 		mockRepo.EXPECT().Get(gomock.Any(), "cmp_404").Return(nil, errors.New("repo error"))
 

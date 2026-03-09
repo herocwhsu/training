@@ -3,7 +3,7 @@ package companyctl
 import (
 	"context"
 
-	"github.com/herocwhsu/training/utexample/internal/service/companysvc"
+	"github.com/herocwhsu/training/utexample/internal/service/companyservice"
 )
 
 type CompanyInfo struct {
@@ -13,10 +13,10 @@ type CompanyInfo struct {
 }
 
 type Controller struct {
-	svc companysvc.CompanyService
+	svc companyservice.CompanyService
 }
 
-func New(svc companysvc.CompanyService) *Controller {
+func New(svc companyservice.CompanyService) *Controller {
 	return &Controller{svc: svc}
 }
 
