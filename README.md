@@ -13,7 +13,7 @@ Each layer depends only on the interface defined by the layer below it, never on
 │  Controller  (companyctl)               │  Maps HTTP/input DTOs ↔ service calls
 │    depends on ▼ CompanyService          │
 ├─────────────────────────────────────────┤
-│  Service     (companyservice)               │  Holds business rules / validation
+│  Service     (companyservice)           │  Holds business rules / validation
 │    depends on ▼ CompanyRepository       │
 ├─────────────────────────────────────────┤
 │  Repository  (companyrepo)              │  Builds domain objects from raw data
