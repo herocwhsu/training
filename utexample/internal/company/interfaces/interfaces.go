@@ -27,3 +27,10 @@ type CompanyRow struct {
 	Email string
 	Name  string
 }
+
+type CompanyService interface {
+	Create(ctx context.Context, email, name string) (string, error)
+	Get(ctx context.Context, id string) (*domain.Company, error)
+	List(ctx context.Context) ([]*domain.Company, error)
+	Remove(ctx context.Context, id string) error
+}

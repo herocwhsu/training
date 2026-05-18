@@ -176,3 +176,85 @@ func (mr *MockCompanyDAOMockRecorder) List(ctx interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockCompanyDAO)(nil).List), ctx)
 }
+
+// MockCompanyService is a mock of CompanyService interface.
+type MockCompanyService struct {
+	ctrl     *gomock.Controller
+	recorder *MockCompanyServiceMockRecorder
+}
+
+// MockCompanyServiceMockRecorder is the mock recorder for MockCompanyService.
+type MockCompanyServiceMockRecorder struct {
+	mock *MockCompanyService
+}
+
+// NewMockCompanyService creates a new mock instance.
+func NewMockCompanyService(ctrl *gomock.Controller) *MockCompanyService {
+	mock := &MockCompanyService{ctrl: ctrl}
+	mock.recorder = &MockCompanyServiceMockRecorder{mock}
+	return mock
+}
+
+// EXPECT returns an object that allows the caller to indicate expected use.
+func (m *MockCompanyService) EXPECT() *MockCompanyServiceMockRecorder {
+	return m.recorder
+}
+
+// Create mocks base method.
+func (m *MockCompanyService) Create(ctx context.Context, email, name string) (string, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Create", ctx, email, name)
+	ret0, _ := ret[0].(string)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Create indicates an expected call of Create.
+func (mr *MockCompanyServiceMockRecorder) Create(ctx, email, name interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Create", reflect.TypeOf((*MockCompanyService)(nil).Create), ctx, email, name)
+}
+
+// Get mocks base method.
+func (m *MockCompanyService) Get(ctx context.Context, id string) (*domain.Company, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Get", ctx, id)
+	ret0, _ := ret[0].(*domain.Company)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// Get indicates an expected call of Get.
+func (mr *MockCompanyServiceMockRecorder) Get(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Get", reflect.TypeOf((*MockCompanyService)(nil).Get), ctx, id)
+}
+
+// List mocks base method.
+func (m *MockCompanyService) List(ctx context.Context) ([]*domain.Company, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "List", ctx)
+	ret0, _ := ret[0].([]*domain.Company)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// List indicates an expected call of List.
+func (mr *MockCompanyServiceMockRecorder) List(ctx interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "List", reflect.TypeOf((*MockCompanyService)(nil).List), ctx)
+}
+
+// Remove mocks base method.
+func (m *MockCompanyService) Remove(ctx context.Context, id string) error {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "Remove", ctx, id)
+	ret0, _ := ret[0].(error)
+	return ret0
+}
+
+// Remove indicates an expected call of Remove.
+func (mr *MockCompanyServiceMockRecorder) Remove(ctx, id interface{}) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Remove", reflect.TypeOf((*MockCompanyService)(nil).Remove), ctx, id)
+}
