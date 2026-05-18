@@ -6,6 +6,7 @@ import (
 
 	"github.com/herocwhsu/training/utexample/internal/company/adapter/repo"
 	"github.com/herocwhsu/training/utexample/internal/company/domain"
+	"github.com/herocwhsu/training/utexample/internal/company/interfaces"
 	"github.com/herocwhsu/training/utexample/internal/company/interfaces/mock"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -74,5 +75,32 @@ func TestCompanyRepository_Remove(t *testing.T) {
 
 		err := d.repo.Remove(t.Context(), "cmp_1")
 		require.NoError(t, err)
+	})
+}
+
+func TestCompanyRepository_List(t *testing.T) {
+	t.Run("ShouldReturnCompanies_WhenDAOListSucceeds", func(t *testing.T) {
+		d := setupCompanyRepoTest(t)
+		rows := []*interfaces.CompanyRow{
+			{ID: "cmp_1", Email: "a@b.com", Name: "Acme"},
+			{ID: "cmp_2", Email: "b@b.com", Name: "Beta"},
+		}
+		d.dao.EXPECT().List(t.Context()).Return(rows, nil)
+
+		got, err := d.repo.List(t.Context())
+		require.NoError(t, err)
+		assert.Equal(t, []*domain.Company{
+			{ID: "cmp_1", Email: "a@b.com", Name: "Acme"},
+			{ID: "cmp_2", Email: "b@b.com", Name: "Beta"},
+		}, got)
+	})
+
+	t.Run("ShouldReturnError_WhenDAOListFails", func(t *testing.T) {
+		d := setupCompanyRepoTest(t)
+		d.dao.EXPECT().List(t.Context()).Return(nil, errors.New("db error"))
+
+		got, err := d.repo.List(t.Context())
+		require.Error(t, err)
+		assert.Nil(t, got)
 	})
 }

@@ -1,6 +1,7 @@
 package application_test
 
 import (
+	"context"
 	"errors"
 	"testing"
 
@@ -31,7 +32,7 @@ func TestUserService_Create(t *testing.T) {
 		d := setupUserServiceTest(t)
 		d.repo.EXPECT().
 			Save(t.Context(), gomock.Any()).
-			DoAndReturn(func(_ any, u *domain.User) error {
+			DoAndReturn(func(_ context.Context, u *domain.User) error {
 				u.ID = "usr_1"
 				return nil
 			})
@@ -87,5 +88,29 @@ func TestUserService_Remove(t *testing.T) {
 
 		err := d.svc.Remove(t.Context(), "usr_1")
 		require.NoError(t, err)
+	})
+}
+
+func TestUserService_List(t *testing.T) {
+	t.Run("ShouldReturnUsers_WhenRepoSucceeds", func(t *testing.T) {
+		d := setupUserServiceTest(t)
+		expected := []*domain.User{
+			{ID: "usr_1", Email: "a@b.com", Name: "Alice"},
+			{ID: "usr_2", Email: "b@b.com", Name: "Bob"},
+		}
+		d.repo.EXPECT().List(t.Context()).Return(expected, nil)
+
+		got, err := d.svc.List(t.Context())
+		require.NoError(t, err)
+		assert.Equal(t, expected, got)
+	})
+
+	t.Run("ShouldReturnError_WhenRepoFails", func(t *testing.T) {
+		d := setupUserServiceTest(t)
+		d.repo.EXPECT().List(t.Context()).Return(nil, errors.New("db error"))
+
+		got, err := d.svc.List(t.Context())
+		require.Error(t, err)
+		assert.Nil(t, got)
 	})
 }

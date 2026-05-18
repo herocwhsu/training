@@ -41,11 +41,7 @@ func (r *UserRepository) FindByID(ctx context.Context, id string) (*domain.User,
 		return nil, err
 	}
 	doc := &userDoc{ID: id, Email: email, Name: name}
-	entity := docToEntity(doc)
-	if err := entity.Validate(); err != nil {
-		return nil, err
-	}
-	return entity, nil
+	return docToEntity(doc), nil
 }
 
 func (r *UserRepository) List(ctx context.Context) ([]*domain.User, error) {

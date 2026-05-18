@@ -28,7 +28,11 @@ func (s *UserService) Create(ctx context.Context, email, name string) (string, e
 }
 
 func (s *UserService) Get(ctx context.Context, id string) (*domain.User, error) {
-	return s.repo.FindByID(ctx, id)
+	u, err := s.repo.FindByID(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("find user by id: %w", err)
+	}
+	return u, nil
 }
 
 func (s *UserService) List(ctx context.Context) ([]*domain.User, error) {
@@ -36,5 +40,8 @@ func (s *UserService) List(ctx context.Context) ([]*domain.User, error) {
 }
 
 func (s *UserService) Remove(ctx context.Context, id string) error {
-	return s.repo.Remove(ctx, id)
+	if err := s.repo.Remove(ctx, id); err != nil {
+		return fmt.Errorf("remove user: %w", err)
+	}
+	return nil
 }

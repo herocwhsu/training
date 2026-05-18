@@ -66,3 +66,47 @@ func TestCompanyController_Get(t *testing.T) {
 		assert.Nil(t, out)
 	})
 }
+
+func TestCompanyController_List(t *testing.T) {
+	t.Run("ShouldReturnCompanyOutputs_WhenServiceSucceeds", func(t *testing.T) {
+		d := setupCompanyControllerTest(t)
+		d.svc.EXPECT().List(t.Context()).Return([]*domain.Company{
+			{ID: "cmp_1", Email: "a@b.com", Name: "Acme"},
+			{ID: "cmp_2", Email: "b@b.com", Name: "Beta"},
+		}, nil)
+
+		out, err := d.ctrl.List(t.Context())
+		require.NoError(t, err)
+		assert.Equal(t, []*controller.CompanyOutput{
+			{ID: "cmp_1", Email: "a@b.com", Name: "Acme"},
+			{ID: "cmp_2", Email: "b@b.com", Name: "Beta"},
+		}, out)
+	})
+
+	t.Run("ShouldReturnError_WhenServiceFails", func(t *testing.T) {
+		d := setupCompanyControllerTest(t)
+		d.svc.EXPECT().List(t.Context()).Return(nil, errors.New("service error"))
+
+		out, err := d.ctrl.List(t.Context())
+		require.Error(t, err)
+		assert.Nil(t, out)
+	})
+}
+
+func TestCompanyController_Remove(t *testing.T) {
+	t.Run("ShouldReturnNil_WhenServiceSucceeds", func(t *testing.T) {
+		d := setupCompanyControllerTest(t)
+		d.svc.EXPECT().Remove(t.Context(), "cmp_1").Return(nil)
+
+		err := d.ctrl.Remove(t.Context(), "cmp_1")
+		require.NoError(t, err)
+	})
+
+	t.Run("ShouldReturnError_WhenServiceFails", func(t *testing.T) {
+		d := setupCompanyControllerTest(t)
+		d.svc.EXPECT().Remove(t.Context(), "cmp_404").Return(errors.New("not found"))
+
+		err := d.ctrl.Remove(t.Context(), "cmp_404")
+		require.Error(t, err)
+	})
+}

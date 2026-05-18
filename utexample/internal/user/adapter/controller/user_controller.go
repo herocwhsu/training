@@ -36,3 +36,19 @@ func (c *UserController) Get(ctx context.Context, id string) (*UserOutput, error
 	}
 	return &UserOutput{ID: user.ID, Email: user.Email, Name: user.Name}, nil
 }
+
+func (c *UserController) List(ctx context.Context) ([]*UserOutput, error) {
+	users, err := c.svc.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]*UserOutput, 0, len(users))
+	for _, user := range users {
+		out = append(out, &UserOutput{ID: user.ID, Email: user.Email, Name: user.Name})
+	}
+	return out, nil
+}
+
+func (c *UserController) Remove(ctx context.Context, id string) error {
+	return c.svc.Remove(ctx, id)
+}

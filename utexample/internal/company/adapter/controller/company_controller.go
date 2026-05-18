@@ -36,3 +36,19 @@ func (c *CompanyController) Get(ctx context.Context, id string) (*CompanyOutput,
 	}
 	return &CompanyOutput{ID: company.ID, Email: company.Email, Name: company.Name}, nil
 }
+
+func (c *CompanyController) List(ctx context.Context) ([]*CompanyOutput, error) {
+	companies, err := c.svc.List(ctx)
+	if err != nil {
+		return nil, err
+	}
+	out := make([]*CompanyOutput, 0, len(companies))
+	for _, company := range companies {
+		out = append(out, &CompanyOutput{ID: company.ID, Email: company.Email, Name: company.Name})
+	}
+	return out, nil
+}
+
+func (c *CompanyController) Remove(ctx context.Context, id string) error {
+	return c.svc.Remove(ctx, id)
+}

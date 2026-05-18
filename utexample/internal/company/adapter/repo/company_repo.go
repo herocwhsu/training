@@ -41,11 +41,7 @@ func (r *CompanyRepository) FindByID(ctx context.Context, id string) (*domain.Co
 		return nil, err
 	}
 	doc := &companyDoc{ID: id, Email: email, Name: name}
-	entity := docToEntity(doc)
-	if err := entity.Validate(); err != nil {
-		return nil, err
-	}
-	return entity, nil
+	return docToEntity(doc), nil
 }
 
 func (r *CompanyRepository) List(ctx context.Context) ([]*domain.Company, error) {

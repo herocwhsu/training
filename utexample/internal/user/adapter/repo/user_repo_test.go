@@ -6,6 +6,7 @@ import (
 
 	"github.com/herocwhsu/training/utexample/internal/user/adapter/repo"
 	"github.com/herocwhsu/training/utexample/internal/user/domain"
+	"github.com/herocwhsu/training/utexample/internal/user/interfaces"
 	"github.com/herocwhsu/training/utexample/internal/user/interfaces/mock"
 	"github.com/golang/mock/gomock"
 	"github.com/stretchr/testify/assert"
@@ -74,5 +75,32 @@ func TestUserRepository_Remove(t *testing.T) {
 
 		err := d.repo.Remove(t.Context(), "usr_1")
 		require.NoError(t, err)
+	})
+}
+
+func TestUserRepository_List(t *testing.T) {
+	t.Run("ShouldReturnUsers_WhenDAOListSucceeds", func(t *testing.T) {
+		d := setupUserRepoTest(t)
+		rows := []*interfaces.UserRow{
+			{ID: "usr_1", Email: "a@b.com", Name: "Alice"},
+			{ID: "usr_2", Email: "b@b.com", Name: "Bob"},
+		}
+		d.dao.EXPECT().List(t.Context()).Return(rows, nil)
+
+		got, err := d.repo.List(t.Context())
+		require.NoError(t, err)
+		assert.Equal(t, []*domain.User{
+			{ID: "usr_1", Email: "a@b.com", Name: "Alice"},
+			{ID: "usr_2", Email: "b@b.com", Name: "Bob"},
+		}, got)
+	})
+
+	t.Run("ShouldReturnError_WhenDAOListFails", func(t *testing.T) {
+		d := setupUserRepoTest(t)
+		d.dao.EXPECT().List(t.Context()).Return(nil, errors.New("db error"))
+
+		got, err := d.repo.List(t.Context())
+		require.Error(t, err)
+		assert.Nil(t, got)
 	})
 }

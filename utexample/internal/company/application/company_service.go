@@ -28,7 +28,11 @@ func (s *CompanyService) Create(ctx context.Context, email, name string) (string
 }
 
 func (s *CompanyService) Get(ctx context.Context, id string) (*domain.Company, error) {
-	return s.repo.FindByID(ctx, id)
+	c, err := s.repo.FindByID(ctx, id)
+	if err != nil {
+		return nil, fmt.Errorf("find company by id: %w", err)
+	}
+	return c, nil
 }
 
 func (s *CompanyService) List(ctx context.Context) ([]*domain.Company, error) {
@@ -36,5 +40,8 @@ func (s *CompanyService) List(ctx context.Context) ([]*domain.Company, error) {
 }
 
 func (s *CompanyService) Remove(ctx context.Context, id string) error {
-	return s.repo.Remove(ctx, id)
+	if err := s.repo.Remove(ctx, id); err != nil {
+		return fmt.Errorf("remove company: %w", err)
+	}
+	return nil
 }

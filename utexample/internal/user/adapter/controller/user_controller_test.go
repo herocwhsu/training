@@ -66,3 +66,47 @@ func TestUserController_Get(t *testing.T) {
 		assert.Nil(t, out)
 	})
 }
+
+func TestUserController_List(t *testing.T) {
+	t.Run("ShouldReturnUserOutputs_WhenServiceSucceeds", func(t *testing.T) {
+		d := setupUserControllerTest(t)
+		d.svc.EXPECT().List(t.Context()).Return([]*domain.User{
+			{ID: "usr_1", Email: "a@b.com", Name: "Alice"},
+			{ID: "usr_2", Email: "b@b.com", Name: "Bob"},
+		}, nil)
+
+		out, err := d.ctrl.List(t.Context())
+		require.NoError(t, err)
+		assert.Equal(t, []*controller.UserOutput{
+			{ID: "usr_1", Email: "a@b.com", Name: "Alice"},
+			{ID: "usr_2", Email: "b@b.com", Name: "Bob"},
+		}, out)
+	})
+
+	t.Run("ShouldReturnError_WhenServiceFails", func(t *testing.T) {
+		d := setupUserControllerTest(t)
+		d.svc.EXPECT().List(t.Context()).Return(nil, errors.New("service error"))
+
+		out, err := d.ctrl.List(t.Context())
+		require.Error(t, err)
+		assert.Nil(t, out)
+	})
+}
+
+func TestUserController_Remove(t *testing.T) {
+	t.Run("ShouldReturnNil_WhenServiceSucceeds", func(t *testing.T) {
+		d := setupUserControllerTest(t)
+		d.svc.EXPECT().Remove(t.Context(), "usr_1").Return(nil)
+
+		err := d.ctrl.Remove(t.Context(), "usr_1")
+		require.NoError(t, err)
+	})
+
+	t.Run("ShouldReturnError_WhenServiceFails", func(t *testing.T) {
+		d := setupUserControllerTest(t)
+		d.svc.EXPECT().Remove(t.Context(), "usr_404").Return(errors.New("not found"))
+
+		err := d.ctrl.Remove(t.Context(), "usr_404")
+		require.Error(t, err)
+	})
+}
