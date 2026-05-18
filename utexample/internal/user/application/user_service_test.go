@@ -31,7 +31,7 @@ func TestUserService_Create(t *testing.T) {
 		d := setupUserServiceTest(t)
 		d.repo.EXPECT().
 			Save(t.Context(), gomock.Any()).
-			DoAndReturn(func(_ interface{}, u *domain.User) error {
+			DoAndReturn(func(_ any, u *domain.User) error {
 				u.ID = "usr_1"
 				return nil
 			})

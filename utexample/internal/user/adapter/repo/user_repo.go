@@ -17,9 +17,6 @@ func docToEntity(doc *userDoc) *domain.User {
 	return &domain.User{ID: doc.ID, Email: doc.Email, Name: doc.Name}
 }
 
-func entityToDoc(u *domain.User) *userDoc {
-	return &userDoc{ID: u.ID, Email: u.Email, Name: u.Name}
-}
 
 type UserRepository struct {
 	dao interfaces.UserDAO

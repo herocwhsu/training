@@ -31,7 +31,7 @@ func TestCompanyService_Create(t *testing.T) {
 		d := setupCompanyServiceTest(t)
 		d.repo.EXPECT().
 			Save(t.Context(), gomock.Any()).
-			DoAndReturn(func(_ interface{}, c *domain.Company) error {
+			DoAndReturn(func(_ any, c *domain.Company) error {
 				c.ID = "cmp_1"
 				return nil
 			})

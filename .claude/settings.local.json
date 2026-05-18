@@ -5,7 +5,11 @@
       "Bash(git commit *)",
       "Bash(git -C /Users/herohsu/Project/training add docs/superpowers/plans/2026-05-18-training-arch-update.md)",
       "Bash(git -C /Users/herohsu/Project/training commit -m \"docs: add training arch update implementation plan\")",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(go test *)",
+      "Bash(mockgen --version)",
+      "Bash(go generate *)",
+      "Bash(go mod *)"
     ]
   }
 }

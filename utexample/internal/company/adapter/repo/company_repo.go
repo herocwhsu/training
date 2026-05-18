@@ -17,9 +17,6 @@ func docToEntity(doc *companyDoc) *domain.Company {
 	return &domain.Company{ID: doc.ID, Email: doc.Email, Name: doc.Name}
 }
 
-func entityToDoc(e *domain.Company) *companyDoc {
-	return &companyDoc{ID: e.ID, Email: e.Email, Name: e.Name}
-}
 
 type CompanyRepository struct {
 	dao interfaces.CompanyDAO
