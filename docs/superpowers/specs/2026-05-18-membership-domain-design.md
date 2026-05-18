@@ -63,6 +63,7 @@ type MembershipRepository interface {
     FindByID(ctx context.Context, id string) (*domain.Membership, error)
     FindByCompanyID(ctx context.Context, companyID string) ([]*domain.Membership, error)
     FindByUserID(ctx context.Context, userID string) ([]*domain.Membership, error)
+    ExistsByCompanyAndUser(ctx context.Context, companyID, userID string) (bool, error)
     Remove(ctx context.Context, id string) error
 }
 
@@ -71,6 +72,7 @@ type MembershipDAO interface {
     FindByID(ctx context.Context, id string) (companyID, userID, role string, err error)
     FindByCompanyID(ctx context.Context, companyID string) ([]MembershipRow, error)
     FindByUserID(ctx context.Context, userID string) ([]MembershipRow, error)
+    ExistsByCompanyAndUser(ctx context.Context, companyID, userID string) (bool, error)
     DeleteByID(ctx context.Context, id string) error
 }
 
@@ -98,9 +100,10 @@ type MembershipService interface {
 **`Add(ctx, companyID, userID, role)`**
 1. Call `companyReader.FindByID` — return `ErrCompanyNotFound` (wrapped) if not found
 2. Call `userReader.FindByID` — return `ErrUserNotFound` (wrapped) if not found
-3. Build `Membership{CompanyID, UserID, Role}`, call `Validate()`
-4. Call `repo.Save` — return error if fails
-5. Return `membership.ID`
+3. Call `repo.ExistsByCompanyAndUser` — return `ErrAlreadyMember` if true
+4. Build `Membership{CompanyID, UserID, Role}`, call `Validate()`
+5. Call `repo.Save` — return error if fails
+6. Return `membership.ID`
 
 **`Remove(ctx, membershipID)`** — delegates to `repo.Remove`, wraps error.
 
@@ -153,9 +156,10 @@ All tests follow existing conventions: `setupMembershipServiceTest(t)` deps stru
 **Service tests** mock `MembershipRepository`, `CompanyReader`, `UserReader`.
 
 Key cases:
-- `Add` succeeds when both company and user exist
+- `Add` succeeds when both company and user exist and membership doesn't yet exist
 - `Add` returns `ErrCompanyNotFound` when company missing
 - `Add` returns `ErrUserNotFound` when user missing
+- `Add` returns `ErrAlreadyMember` when membership already exists
 - `Add` returns `ErrInvalidRole` when role is invalid
 - `Remove`, `ListByCompany`, `ListByUser` happy path + repo failure
 
