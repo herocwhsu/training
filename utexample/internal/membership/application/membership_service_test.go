@@ -93,6 +93,27 @@ func TestMembershipService_Add(t *testing.T) {
 		require.Error(t, err)
 		assert.ErrorIs(t, err, domain.ErrInvalidRole)
 	})
+
+	t.Run("ShouldReturnError_WhenExistsCheckFails", func(t *testing.T) {
+		d := setupMembershipServiceTest(t)
+		d.companyReader.EXPECT().FindByID(t.Context(), "cmp_1").Return(&companydomain.Company{ID: "cmp_1"}, nil)
+		d.userReader.EXPECT().FindByID(t.Context(), "usr_1").Return(&userdomain.User{ID: "usr_1"}, nil)
+		d.repo.EXPECT().ExistsByCompanyAndUser(t.Context(), "cmp_1", "usr_1").Return(false, errors.New("db error"))
+
+		_, err := d.svc.Add(t.Context(), "cmp_1", "usr_1", "member")
+		require.Error(t, err)
+	})
+
+	t.Run("ShouldReturnError_WhenSaveFails", func(t *testing.T) {
+		d := setupMembershipServiceTest(t)
+		d.companyReader.EXPECT().FindByID(t.Context(), "cmp_1").Return(&companydomain.Company{ID: "cmp_1"}, nil)
+		d.userReader.EXPECT().FindByID(t.Context(), "usr_1").Return(&userdomain.User{ID: "usr_1"}, nil)
+		d.repo.EXPECT().ExistsByCompanyAndUser(t.Context(), "cmp_1", "usr_1").Return(false, nil)
+		d.repo.EXPECT().Save(t.Context(), gomock.Any()).Return(errors.New("db error"))
+
+		_, err := d.svc.Add(t.Context(), "cmp_1", "usr_1", "member")
+		require.Error(t, err)
+	})
 }
 
 func TestMembershipService_Remove(t *testing.T) {

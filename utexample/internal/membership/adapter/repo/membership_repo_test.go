@@ -147,4 +147,12 @@ func TestMembershipRepository_Remove(t *testing.T) {
 		err := d.repo.Remove(t.Context(), "mem_1")
 		require.NoError(t, err)
 	})
+
+	t.Run("ShouldReturnError_WhenDAODeleteFails", func(t *testing.T) {
+		d := setupMembershipRepoTest(t)
+		d.dao.EXPECT().DeleteByID(t.Context(), "mem_1").Return(errors.New("db error"))
+
+		err := d.repo.Remove(t.Context(), "mem_1")
+		require.Error(t, err)
+	})
 }
