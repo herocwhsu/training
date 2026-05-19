@@ -38,21 +38,21 @@ utexample/
     │   ├── application/      # CompanyService (orchestrates repo)
     │   ├── adapter/
     │   │   ├── controller/   # Controller + DTOs
-    │   │   └── repo/         # companyDoc, doc↔entity mapping, DAO stub
+    │   │   └── repo/         # companyDoc, doc↔entity mapping, DAO adapter
     │   └── interfaces/       # All interfaces + generated mocks
     ├── user/
-    │   ├── domain/
-    │   ├── application/
+    │   ├── domain/           # User entity, Validate(), error vars
+    │   ├── application/      # UserService (orchestrates repo)
     │   ├── adapter/
-    │   │   ├── controller/
-    │   │   └── repo/
-    │   └── interfaces/
+    │   │   ├── controller/   # Controller + DTOs
+    │   │   └── repo/         # userDoc, doc↔entity mapping, DAO adapter
+    │   └── interfaces/       # All interfaces + generated mocks
     └── membership/
         ├── domain/           # Membership entity, Validate(), error vars
         ├── application/      # MembershipService (coordinates company + user + repo)
         ├── adapter/
         │   ├── controller/   # Controller + DTOs
-        │   └── repo/         # membershipDoc, doc↔entity mapping, DAO stub
+        │   └── repo/         # membershipDoc, doc↔entity mapping, DAO adapter
         └── interfaces/       # All interfaces + generated mocks (incl. CompanyReader, UserReader)
 ```
 
