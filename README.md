@@ -8,20 +8,18 @@ A hands-on example demonstrating vortex-backend clean architecture conventions u
 
 Each domain follows a four-layer structure. Dependencies flow inward — outer layers depend on inner layers, never the reverse.
 
-```
-┌─────────────────────────────────────────────────┐
-│  adapter/controller   Maps input DTOs ↔ service │
-│    depends on ▼ interfaces.XxxService            │
-├─────────────────────────────────────────────────┤
-│  application          Orchestrates domain +repo  │
-│    depends on ▼ interfaces.XxxRepository         │
-├─────────────────────────────────────────────────┤
-│  adapter/repo         Doc↔entity mapping + stub  │
-│    depends on ▼ interfaces.XxxDAO                │
-├─────────────────────────────────────────────────┤
-│  domain               Entity + errors            │
-│    no external deps                              │
-└─────────────────────────────────────────────────┘
+```mermaid
+graph BT
+    DOM["domain\nEntity · Validate() · errors"]
+    IFACE["interfaces\nXxxService · XxxRepository · XxxDAO"]
+    APP["application\nXxxService impl"]
+    REPO["adapter/repo\nXxxRepository impl · doc↔entity mapping"]
+    CTL["adapter/controller\nController · DTOs"]
+
+    IFACE --> DOM
+    APP --> IFACE
+    REPO --> IFACE
+    CTL --> IFACE
 ```
 
 ### Layer Dependency Flow
