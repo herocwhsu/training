@@ -24,6 +24,24 @@ Each domain follows a four-layer structure. Dependencies flow inward — outer l
 └─────────────────────────────────────────────────┘
 ```
 
+### Layer Dependency Flow
+
+```mermaid
+graph TD
+    CTL["adapter/controller\nController + DTOs"]
+    APP["application\nXxxService"]
+    REPO["adapter/repo\nXxxRepository impl"]
+    IFACE["interfaces\nXxxService · XxxRepository · XxxDAO"]
+    DOM["domain\nEntity · Validate() · errors"]
+
+    CTL -->|"XxxService"| IFACE
+    APP -->|"XxxRepository"| IFACE
+    APP -->|entity types| DOM
+    REPO -->|"XxxDAO"| IFACE
+    REPO -->|entity types| DOM
+    IFACE -->|entity types| DOM
+```
+
 Interfaces for each domain live in `interfaces/interfaces.go`. Mocks are generated from that file and placed in `interfaces/mock/`.
 
 ---
@@ -58,6 +76,50 @@ utexample/
 
 Tests are co-located with source files (`*_test.go` next to `*.go`).
 
+### Test Module Wiring
+
+Each layer's tests mock the layer directly below it via generated mocks.
+
+```mermaid
+graph TD
+    subgraph "controller_test (package)"
+        CT["*_controller_test.go"]
+    end
+    subgraph "application_test (package)"
+        ST["*_service_test.go"]
+    end
+    subgraph "repo_test (package)"
+        RT["*_repo_test.go"]
+    end
+
+    subgraph "interfaces/mock"
+        MS["MockXxxService"]
+        MR["MockXxxRepository\nMockCompanyReader\nMockUserReader"]
+        MD["MockXxxDAO"]
+    end
+
+    subgraph "interfaces"
+        IS["XxxService interface"]
+        IR["XxxRepository interface"]
+        ID["XxxDAO interface"]
+    end
+
+    subgraph "domain"
+        DOM["Entity · errors"]
+    end
+
+    CT -->|"injects"| MS
+    ST -->|"injects"| MR
+    RT -->|"injects"| MD
+
+    MS -.->|"generated from"| IS
+    MR -.->|"generated from"| IR
+    MD -.->|"generated from"| ID
+
+    IS --> DOM
+    IR --> DOM
+```
+
 ---
 
 ## Key Conventions
@@ -81,6 +143,34 @@ The `membership` domain demonstrates how domains communicate without direct coup
 - At wire-up, `*companyrepo.CompanyRepository` and `*userrepo.UserRepository` satisfy these interfaces
 - Neither `company` nor `user` imports from `membership`
 - `MembershipService` depends only on interfaces it owns — not on other domains' packages
+
+### Cross-Domain Dependency
+
+```mermaid
+graph TD
+    subgraph membership
+        MS["MembershipService"]
+        MI["membership/interfaces\nCompanyReader · UserReader\nMembershipRepository"]
+    end
+
+    subgraph company
+        CR["CompanyRepository\n(satisfies CompanyReader)"]
+        CD["company/domain\nCompany"]
+    end
+
+    subgraph user
+        UR["UserRepository\n(satisfies UserReader)"]
+        UD["user/domain\nUser"]
+    end
+
+    MS -->|"owns & depends on"| MI
+    CR -.->|"satisfies at wire-up"| MI
+    UR -.->|"satisfies at wire-up"| MI
+    MI -->|"references"| CD
+    MI -->|"references"| UD
+```
+
+Solid arrows = compile-time imports. Dashed arrows = interface satisfaction (no import from company/user into membership).
 
 ---
 
