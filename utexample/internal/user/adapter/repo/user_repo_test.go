@@ -28,14 +28,15 @@ func setupUserRepoTest(t *testing.T) *userRepoDeps {
 }
 
 func TestUserRepository_Save(t *testing.T) {
-	t.Run("ShouldSetID_WhenDAOInsertSucceeds", func(t *testing.T) {
+	t.Run("ShouldReturnSavedUser_WhenDAOInsertSucceeds", func(t *testing.T) {
 		d := setupUserRepoTest(t)
 		user := &domain.User{Email: "a@b.com", Name: "Alice"}
 		d.dao.EXPECT().Insert(t.Context(), "a@b.com", "Alice").Return("usr_1", nil)
 
-		err := d.repo.Save(t.Context(), user)
+		got, err := d.repo.Save(t.Context(), user)
 		require.NoError(t, err)
-		assert.Equal(t, "usr_1", user.ID)
+		assert.Equal(t, &domain.User{ID: "usr_1", Email: "a@b.com", Name: "Alice"}, got)
+		assert.Empty(t, user.ID, "input entity must not be mutated")
 	})
 
 	t.Run("ShouldReturnError_WhenDAOInsertFails", func(t *testing.T) {
@@ -43,8 +44,9 @@ func TestUserRepository_Save(t *testing.T) {
 		user := &domain.User{Email: "a@b.com", Name: "Alice"}
 		d.dao.EXPECT().Insert(t.Context(), "a@b.com", "Alice").Return("", errors.New("db error"))
 
-		err := d.repo.Save(t.Context(), user)
+		got, err := d.repo.Save(t.Context(), user)
 		require.Error(t, err)
+		assert.Nil(t, got)
 	})
 }
 

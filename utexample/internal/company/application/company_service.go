@@ -21,10 +21,11 @@ func (s *CompanyService) Create(ctx context.Context, email, name string) (string
 	if err := c.Validate(); err != nil {
 		return "", err
 	}
-	if err := s.repo.Save(ctx, c); err != nil {
+	saved, err := s.repo.Save(ctx, c)
+	if err != nil {
 		return "", fmt.Errorf("save company: %w", err)
 	}
-	return c.ID, nil
+	return saved.ID, nil
 }
 
 func (s *CompanyService) Get(ctx context.Context, id string) (*domain.Company, error) {

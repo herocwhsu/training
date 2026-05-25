@@ -22,7 +22,7 @@ type UserReader interface {
 }
 
 type MembershipRepository interface {
-	Save(ctx context.Context, m *domain.Membership) error
+	Save(ctx context.Context, m *domain.Membership) (*domain.Membership, error)
 	FindByID(ctx context.Context, id string) (*domain.Membership, error)
 	FindByCompanyID(ctx context.Context, companyID string) ([]*domain.Membership, error)
 	FindByUserID(ctx context.Context, userID string) ([]*domain.Membership, error)

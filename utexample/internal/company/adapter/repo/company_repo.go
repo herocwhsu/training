@@ -26,13 +26,12 @@ func NewCompanyRepository(dao interfaces.CompanyDAO) *CompanyRepository {
 	return &CompanyRepository{dao: dao}
 }
 
-func (r *CompanyRepository) Save(ctx context.Context, company *domain.Company) error {
+func (r *CompanyRepository) Save(ctx context.Context, company *domain.Company) (*domain.Company, error) {
 	id, err := r.dao.Insert(ctx, company.Email, company.Name)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	company.ID = id
-	return nil
+	return &domain.Company{ID: id, Email: company.Email, Name: company.Name}, nil
 }
 
 func (r *CompanyRepository) FindByID(ctx context.Context, id string) (*domain.Company, error) {

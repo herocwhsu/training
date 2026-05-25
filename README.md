@@ -197,7 +197,7 @@ type UserService interface {
 }
 
 type UserRepository interface {
-    Save(ctx context.Context, user *domain.User) error
+    Save(ctx context.Context, user *domain.User) (*domain.User, error)
     FindByID(ctx context.Context, id string) (*domain.User, error)
     // ...
 }
@@ -216,10 +216,11 @@ func (s *UserService) Create(ctx context.Context, email, name string) (string, e
     if err := u.Validate(); err != nil {
         return "", err
     }
-    if err := s.repo.Save(ctx, u); err != nil {
+    saved, err := s.repo.Save(ctx, u)
+    if err != nil {
         return "", fmt.Errorf("save user: %w", err)
     }
-    return u.ID, nil
+    return saved.ID, nil
 }
 ```
 
@@ -238,13 +239,12 @@ func docToEntity(doc *userDoc) *domain.User {
     return &domain.User{ID: doc.ID, Email: doc.Email, Name: doc.Name}
 }
 
-func (r *UserRepository) Save(ctx context.Context, user *domain.User) error {
+func (r *UserRepository) Save(ctx context.Context, user *domain.User) (*domain.User, error) {
     id, err := r.dao.Insert(ctx, user.Email, user.Name)
     if err != nil {
-        return err
+        return nil, err
     }
-    user.ID = id
-    return nil
+    return &domain.User{ID: id, Email: user.Email, Name: user.Name}, nil
 }
 ```
 

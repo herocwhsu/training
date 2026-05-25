@@ -40,10 +40,11 @@ func (s *MembershipService) Add(ctx context.Context, companyID, userID, role str
 	if err := m.Validate(); err != nil {
 		return "", err
 	}
-	if err := s.repo.Save(ctx, m); err != nil {
+	saved, err := s.repo.Save(ctx, m)
+	if err != nil {
 		return "", fmt.Errorf("save membership: %w", err)
 	}
-	return m.ID, nil
+	return saved.ID, nil
 }
 
 func (s *MembershipService) Remove(ctx context.Context, membershipID string) error {

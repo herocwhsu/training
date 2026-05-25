@@ -32,9 +32,8 @@ func TestUserService_Create(t *testing.T) {
 		d := setupUserServiceTest(t)
 		d.repo.EXPECT().
 			Save(t.Context(), gomock.Any()).
-			DoAndReturn(func(_ context.Context, u *domain.User) error {
-				u.ID = "usr_1"
-				return nil
+			DoAndReturn(func(_ context.Context, u *domain.User) (*domain.User, error) {
+				return &domain.User{ID: "usr_1", Email: u.Email, Name: u.Name}, nil
 			})
 
 		id, err := d.svc.Create(t.Context(), "a@b.com", "Alice")
@@ -52,7 +51,7 @@ func TestUserService_Create(t *testing.T) {
 
 	t.Run("ShouldReturnError_WhenRepoFails", func(t *testing.T) {
 		d := setupUserServiceTest(t)
-		d.repo.EXPECT().Save(t.Context(), gomock.Any()).Return(errors.New("db error"))
+		d.repo.EXPECT().Save(t.Context(), gomock.Any()).Return(nil, errors.New("db error"))
 
 		_, err := d.svc.Create(t.Context(), "a@b.com", "Alice")
 		require.Error(t, err)

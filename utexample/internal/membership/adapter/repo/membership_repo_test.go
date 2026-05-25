@@ -28,14 +28,15 @@ func setupMembershipRepoTest(t *testing.T) *membershipRepoDeps {
 }
 
 func TestMembershipRepository_Save(t *testing.T) {
-	t.Run("ShouldSetID_WhenDAOInsertSucceeds", func(t *testing.T) {
+	t.Run("ShouldReturnSavedMembership_WhenDAOInsertSucceeds", func(t *testing.T) {
 		d := setupMembershipRepoTest(t)
 		m := &domain.Membership{CompanyID: "cmp_1", UserID: "usr_1", Role: "member"}
 		d.dao.EXPECT().Insert(t.Context(), "cmp_1", "usr_1", "member").Return("mem_1", nil)
 
-		err := d.repo.Save(t.Context(), m)
+		got, err := d.repo.Save(t.Context(), m)
 		require.NoError(t, err)
-		assert.Equal(t, "mem_1", m.ID)
+		assert.Equal(t, &domain.Membership{ID: "mem_1", CompanyID: "cmp_1", UserID: "usr_1", Role: "member"}, got)
+		assert.Empty(t, m.ID, "input entity must not be mutated")
 	})
 
 	t.Run("ShouldReturnError_WhenDAOInsertFails", func(t *testing.T) {
@@ -43,8 +44,9 @@ func TestMembershipRepository_Save(t *testing.T) {
 		m := &domain.Membership{CompanyID: "cmp_1", UserID: "usr_1", Role: "member"}
 		d.dao.EXPECT().Insert(t.Context(), "cmp_1", "usr_1", "member").Return("", errors.New("db error"))
 
-		err := d.repo.Save(t.Context(), m)
+		got, err := d.repo.Save(t.Context(), m)
 		require.Error(t, err)
+		assert.Nil(t, got)
 	})
 }
 

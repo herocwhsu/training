@@ -26,13 +26,12 @@ func NewUserRepository(dao interfaces.UserDAO) *UserRepository {
 	return &UserRepository{dao: dao}
 }
 
-func (r *UserRepository) Save(ctx context.Context, user *domain.User) error {
+func (r *UserRepository) Save(ctx context.Context, user *domain.User) (*domain.User, error) {
 	id, err := r.dao.Insert(ctx, user.Email, user.Name)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	user.ID = id
-	return nil
+	return &domain.User{ID: id, Email: user.Email, Name: user.Name}, nil
 }
 
 func (r *UserRepository) FindByID(ctx context.Context, id string) (*domain.User, error) {

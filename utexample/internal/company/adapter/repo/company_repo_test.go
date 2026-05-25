@@ -28,14 +28,15 @@ func setupCompanyRepoTest(t *testing.T) *companyRepoDeps {
 }
 
 func TestCompanyRepository_Save(t *testing.T) {
-	t.Run("ShouldReturnNil_WhenDAOInsertSucceeds", func(t *testing.T) {
+	t.Run("ShouldReturnSavedCompany_WhenDAOInsertSucceeds", func(t *testing.T) {
 		d := setupCompanyRepoTest(t)
 		company := &domain.Company{Email: "a@b.com", Name: "Acme"}
 		d.dao.EXPECT().Insert(t.Context(), "a@b.com", "Acme").Return("cmp_1", nil)
 
-		err := d.repo.Save(t.Context(), company)
+		got, err := d.repo.Save(t.Context(), company)
 		require.NoError(t, err)
-		assert.Equal(t, "cmp_1", company.ID)
+		assert.Equal(t, &domain.Company{ID: "cmp_1", Email: "a@b.com", Name: "Acme"}, got)
+		assert.Empty(t, company.ID, "input entity must not be mutated")
 	})
 
 	t.Run("ShouldReturnError_WhenDAOInsertFails", func(t *testing.T) {
@@ -43,8 +44,9 @@ func TestCompanyRepository_Save(t *testing.T) {
 		company := &domain.Company{Email: "a@b.com", Name: "Acme"}
 		d.dao.EXPECT().Insert(t.Context(), "a@b.com", "Acme").Return("", errors.New("db error"))
 
-		err := d.repo.Save(t.Context(), company)
+		got, err := d.repo.Save(t.Context(), company)
 		require.Error(t, err)
+		assert.Nil(t, got)
 	})
 }
 

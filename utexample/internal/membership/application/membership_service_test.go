@@ -43,9 +43,8 @@ func TestMembershipService_Add(t *testing.T) {
 		d.repo.EXPECT().ExistsByCompanyAndUser(t.Context(), "cmp_1", "usr_1").Return(false, nil)
 		d.repo.EXPECT().
 			Save(t.Context(), gomock.Any()).
-			DoAndReturn(func(_ context.Context, m *domain.Membership) error {
-				m.ID = "mem_1"
-				return nil
+			DoAndReturn(func(_ context.Context, m *domain.Membership) (*domain.Membership, error) {
+				return &domain.Membership{ID: "mem_1", CompanyID: m.CompanyID, UserID: m.UserID, Role: m.Role}, nil
 			})
 
 		id, err := d.svc.Add(t.Context(), "cmp_1", "usr_1", "member")
@@ -109,7 +108,7 @@ func TestMembershipService_Add(t *testing.T) {
 		d.companyReader.EXPECT().FindByID(t.Context(), "cmp_1").Return(&companydomain.Company{ID: "cmp_1"}, nil)
 		d.userReader.EXPECT().FindByID(t.Context(), "usr_1").Return(&userdomain.User{ID: "usr_1"}, nil)
 		d.repo.EXPECT().ExistsByCompanyAndUser(t.Context(), "cmp_1", "usr_1").Return(false, nil)
-		d.repo.EXPECT().Save(t.Context(), gomock.Any()).Return(errors.New("db error"))
+		d.repo.EXPECT().Save(t.Context(), gomock.Any()).Return(nil, errors.New("db error"))
 
 		_, err := d.svc.Add(t.Context(), "cmp_1", "usr_1", "member")
 		require.Error(t, err)

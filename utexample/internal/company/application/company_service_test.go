@@ -32,9 +32,8 @@ func TestCompanyService_Create(t *testing.T) {
 		d := setupCompanyServiceTest(t)
 		d.repo.EXPECT().
 			Save(t.Context(), gomock.Any()).
-			DoAndReturn(func(_ context.Context, c *domain.Company) error {
-				c.ID = "cmp_1"
-				return nil
+			DoAndReturn(func(_ context.Context, c *domain.Company) (*domain.Company, error) {
+				return &domain.Company{ID: "cmp_1", Email: c.Email, Name: c.Name}, nil
 			})
 
 		id, err := d.svc.Create(t.Context(), "a@b.com", "Acme")
@@ -52,7 +51,7 @@ func TestCompanyService_Create(t *testing.T) {
 
 	t.Run("ShouldReturnError_WhenRepoFails", func(t *testing.T) {
 		d := setupCompanyServiceTest(t)
-		d.repo.EXPECT().Save(t.Context(), gomock.Any()).Return(errors.New("db error"))
+		d.repo.EXPECT().Save(t.Context(), gomock.Any()).Return(nil, errors.New("db error"))
 
 		_, err := d.svc.Create(t.Context(), "a@b.com", "Acme")
 		require.Error(t, err)

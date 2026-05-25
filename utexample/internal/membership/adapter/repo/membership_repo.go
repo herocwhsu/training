@@ -26,13 +26,12 @@ func NewMembershipRepository(dao interfaces.MembershipDAO) *MembershipRepository
 	return &MembershipRepository{dao: dao}
 }
 
-func (r *MembershipRepository) Save(ctx context.Context, m *domain.Membership) error {
+func (r *MembershipRepository) Save(ctx context.Context, m *domain.Membership) (*domain.Membership, error) {
 	id, err := r.dao.Insert(ctx, m.CompanyID, m.UserID, m.Role)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	m.ID = id
-	return nil
+	return &domain.Membership{ID: id, CompanyID: m.CompanyID, UserID: m.UserID, Role: m.Role}, nil
 }
 
 func (r *MembershipRepository) FindByID(ctx context.Context, id string) (*domain.Membership, error) {

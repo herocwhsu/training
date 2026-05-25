@@ -81,11 +81,12 @@ func (mr *MockCompanyRepositoryMockRecorder) Remove(ctx, id interface{}) *gomock
 }
 
 // Save mocks base method.
-func (m *MockCompanyRepository) Save(ctx context.Context, company *domain.Company) error {
+func (m *MockCompanyRepository) Save(ctx context.Context, company *domain.Company) (*domain.Company, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Save", ctx, company)
-	ret0, _ := ret[0].(error)
-	return ret0
+	ret0, _ := ret[0].(*domain.Company)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // Save indicates an expected call of Save.

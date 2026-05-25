@@ -9,7 +9,7 @@ import (
 //go:generate mockgen -source=interfaces.go -destination mock/interfaces.go -package=mock
 
 type UserRepository interface {
-	Save(ctx context.Context, user *domain.User) error
+	Save(ctx context.Context, user *domain.User) (*domain.User, error)
 	FindByID(ctx context.Context, id string) (*domain.User, error)
 	List(ctx context.Context) ([]*domain.User, error)
 	Remove(ctx context.Context, id string) error
