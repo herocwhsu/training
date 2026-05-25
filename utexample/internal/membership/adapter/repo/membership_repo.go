@@ -15,7 +15,7 @@ type membershipDoc struct {
 }
 
 func docToEntity(doc *membershipDoc) *domain.Membership {
-	return &domain.Membership{ID: doc.ID, CompanyID: doc.CompanyID, UserID: doc.UserID, Role: doc.Role}
+	return &domain.Membership{ID: doc.ID, CompanyID: doc.CompanyID, UserID: doc.UserID, Role: domain.Role(doc.Role)}
 }
 
 type MembershipRepository struct {
@@ -27,19 +27,20 @@ func NewMembershipRepository(dao interfaces.MembershipDAO) *MembershipRepository
 }
 
 func (r *MembershipRepository) Save(ctx context.Context, m *domain.Membership) (*domain.Membership, error) {
-	id, err := r.dao.Insert(ctx, m.CompanyID, m.UserID, m.Role)
+	id, err := r.dao.Insert(ctx, m.CompanyID, m.UserID, string(m.Role))
 	if err != nil {
 		return nil, err
 	}
-	return &domain.Membership{ID: id, CompanyID: m.CompanyID, UserID: m.UserID, Role: m.Role}, nil
+	doc := &membershipDoc{ID: id, CompanyID: m.CompanyID, UserID: m.UserID, Role: string(m.Role)}
+	return docToEntity(doc), nil
 }
 
 func (r *MembershipRepository) FindByID(ctx context.Context, id string) (*domain.Membership, error) {
-	companyID, userID, role, err := r.dao.FindByID(ctx, id)
+	row, err := r.dao.FindByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	return docToEntity(&membershipDoc{ID: id, CompanyID: companyID, UserID: userID, Role: role}), nil
+	return docToEntity(&membershipDoc{ID: row.ID, CompanyID: row.CompanyID, UserID: row.UserID, Role: row.Role}), nil
 }
 
 func (r *MembershipRepository) FindByCompanyID(ctx context.Context, companyID string) ([]*domain.Membership, error) {

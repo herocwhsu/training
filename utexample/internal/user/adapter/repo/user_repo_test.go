@@ -53,7 +53,7 @@ func TestUserRepository_Save(t *testing.T) {
 func TestUserRepository_FindByID(t *testing.T) {
 	t.Run("ShouldReturnUser_WhenDAOFindsRecord", func(t *testing.T) {
 		d := setupUserRepoTest(t)
-		d.dao.EXPECT().FindByID(t.Context(), "usr_1").Return("a@b.com", "Alice", nil)
+		d.dao.EXPECT().FindByID(t.Context(), "usr_1").Return(&interfaces.UserRow{ID: "usr_1", Email: "a@b.com", Name: "Alice"}, nil)
 
 		got, err := d.repo.FindByID(t.Context(), "usr_1")
 		require.NoError(t, err)
@@ -62,7 +62,7 @@ func TestUserRepository_FindByID(t *testing.T) {
 
 	t.Run("ShouldReturnError_WhenDAOReturnsNotFound", func(t *testing.T) {
 		d := setupUserRepoTest(t)
-		d.dao.EXPECT().FindByID(t.Context(), "usr_404").Return("", "", domain.ErrUserNotFound)
+		d.dao.EXPECT().FindByID(t.Context(), "usr_404").Return(nil, domain.ErrUserNotFound)
 
 		got, err := d.repo.FindByID(t.Context(), "usr_404")
 		require.Error(t, err)

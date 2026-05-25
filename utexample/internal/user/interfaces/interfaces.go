@@ -17,7 +17,7 @@ type UserRepository interface {
 
 type UserDAO interface {
 	Insert(ctx context.Context, email, name string) (id string, err error)
-	FindByID(ctx context.Context, id string) (email, name string, err error)
+	FindByID(ctx context.Context, id string) (*UserRow, error)
 	List(ctx context.Context) ([]*UserRow, error)
 	DeleteByID(ctx context.Context, id string) error
 }

@@ -53,7 +53,7 @@ func TestCompanyRepository_Save(t *testing.T) {
 func TestCompanyRepository_FindByID(t *testing.T) {
 	t.Run("ShouldReturnCompany_WhenDAOFindsRecord", func(t *testing.T) {
 		d := setupCompanyRepoTest(t)
-		d.dao.EXPECT().FindByID(t.Context(), "cmp_1").Return("a@b.com", "Acme", nil)
+		d.dao.EXPECT().FindByID(t.Context(), "cmp_1").Return(&interfaces.CompanyRow{ID: "cmp_1", Email: "a@b.com", Name: "Acme"}, nil)
 
 		got, err := d.repo.FindByID(t.Context(), "cmp_1")
 		require.NoError(t, err)
@@ -62,7 +62,7 @@ func TestCompanyRepository_FindByID(t *testing.T) {
 
 	t.Run("ShouldReturnError_WhenDAOReturnsNotFound", func(t *testing.T) {
 		d := setupCompanyRepoTest(t)
-		d.dao.EXPECT().FindByID(t.Context(), "cmp_404").Return("", "", domain.ErrCompanyNotFound)
+		d.dao.EXPECT().FindByID(t.Context(), "cmp_404").Return(nil, domain.ErrCompanyNotFound)
 
 		got, err := d.repo.FindByID(t.Context(), "cmp_404")
 		require.Error(t, err)

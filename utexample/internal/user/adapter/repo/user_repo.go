@@ -31,15 +31,16 @@ func (r *UserRepository) Save(ctx context.Context, user *domain.User) (*domain.U
 	if err != nil {
 		return nil, err
 	}
-	return &domain.User{ID: id, Email: user.Email, Name: user.Name}, nil
+	doc := &userDoc{ID: id, Email: user.Email, Name: user.Name}
+	return docToEntity(doc), nil
 }
 
 func (r *UserRepository) FindByID(ctx context.Context, id string) (*domain.User, error) {
-	email, name, err := r.dao.FindByID(ctx, id)
+	row, err := r.dao.FindByID(ctx, id)
 	if err != nil {
 		return nil, err
 	}
-	doc := &userDoc{ID: id, Email: email, Name: name}
+	doc := &userDoc{ID: row.ID, Email: row.Email, Name: row.Name}
 	return docToEntity(doc), nil
 }
 

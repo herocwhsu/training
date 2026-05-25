@@ -204,6 +204,7 @@ type UserRepository interface {
 
 type UserDAO interface {
     Insert(ctx context.Context, email, name string) (id string, err error)
+    FindByID(ctx context.Context, id string) (*UserRow, error)
     // ...
 }
 ```
@@ -244,7 +245,8 @@ func (r *UserRepository) Save(ctx context.Context, user *domain.User) (*domain.U
     if err != nil {
         return nil, err
     }
-    return &domain.User{ID: id, Email: user.Email, Name: user.Name}, nil
+    doc := &userDoc{ID: id, Email: user.Email, Name: user.Name}
+    return docToEntity(doc), nil
 }
 ```
 

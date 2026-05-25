@@ -42,7 +42,7 @@ func (c *MembershipController) ListByCompany(ctx context.Context, companyID stri
 	}
 	out := make([]*MembershipOutput, 0, len(memberships))
 	for _, m := range memberships {
-		out = append(out, &MembershipOutput{ID: m.ID, CompanyID: m.CompanyID, UserID: m.UserID, Role: m.Role})
+		out = append(out, &MembershipOutput{ID: m.ID, CompanyID: m.CompanyID, UserID: m.UserID, Role: string(m.Role)})
 	}
 	return out, nil
 }
@@ -54,7 +54,7 @@ func (c *MembershipController) ListByUser(ctx context.Context, userID string) ([
 	}
 	out := make([]*MembershipOutput, 0, len(memberships))
 	for _, m := range memberships {
-		out = append(out, &MembershipOutput{ID: m.ID, CompanyID: m.CompanyID, UserID: m.UserID, Role: m.Role})
+		out = append(out, &MembershipOutput{ID: m.ID, CompanyID: m.CompanyID, UserID: m.UserID, Role: string(m.Role)})
 	}
 	return out, nil
 }

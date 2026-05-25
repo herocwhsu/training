@@ -17,7 +17,7 @@ type CompanyRepository interface {
 
 type CompanyDAO interface {
 	Insert(ctx context.Context, email, name string) (id string, err error)
-	FindByID(ctx context.Context, id string) (email, name string, err error)
+	FindByID(ctx context.Context, id string) (*CompanyRow, error)
 	List(ctx context.Context) ([]*CompanyRow, error)
 	DeleteByID(ctx context.Context, id string) error
 }

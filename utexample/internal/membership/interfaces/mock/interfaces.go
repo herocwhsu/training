@@ -256,10 +256,10 @@ func (mr *MockMembershipDAOMockRecorder) ExistsByCompanyAndUser(ctx, companyID, 
 }
 
 // FindByCompanyID mocks base method.
-func (m *MockMembershipDAO) FindByCompanyID(ctx context.Context, companyID string) ([]interfaces.MembershipRow, error) {
+func (m *MockMembershipDAO) FindByCompanyID(ctx context.Context, companyID string) ([]*interfaces.MembershipRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByCompanyID", ctx, companyID)
-	ret0, _ := ret[0].([]interfaces.MembershipRow)
+	ret0, _ := ret[0].([]*interfaces.MembershipRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -271,14 +271,12 @@ func (mr *MockMembershipDAOMockRecorder) FindByCompanyID(ctx, companyID interfac
 }
 
 // FindByID mocks base method.
-func (m *MockMembershipDAO) FindByID(ctx context.Context, id string) (string, string, string, error) {
+func (m *MockMembershipDAO) FindByID(ctx context.Context, id string) (*interfaces.MembershipRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByID", ctx, id)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(string)
-	ret2, _ := ret[2].(string)
-	ret3, _ := ret[3].(error)
-	return ret0, ret1, ret2, ret3
+	ret0, _ := ret[0].(*interfaces.MembershipRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // FindByID indicates an expected call of FindByID.
@@ -288,10 +286,10 @@ func (mr *MockMembershipDAOMockRecorder) FindByID(ctx, id interface{}) *gomock.C
 }
 
 // FindByUserID mocks base method.
-func (m *MockMembershipDAO) FindByUserID(ctx context.Context, userID string) ([]interfaces.MembershipRow, error) {
+func (m *MockMembershipDAO) FindByUserID(ctx context.Context, userID string) ([]*interfaces.MembershipRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByUserID", ctx, userID)
-	ret0, _ := ret[0].([]interfaces.MembershipRow)
+	ret0, _ := ret[0].([]*interfaces.MembershipRow)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

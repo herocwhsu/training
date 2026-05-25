@@ -53,7 +53,7 @@ func TestMembershipRepository_Save(t *testing.T) {
 func TestMembershipRepository_FindByID(t *testing.T) {
 	t.Run("ShouldReturnMembership_WhenDAOFindsRecord", func(t *testing.T) {
 		d := setupMembershipRepoTest(t)
-		d.dao.EXPECT().FindByID(t.Context(), "mem_1").Return("cmp_1", "usr_1", "member", nil)
+		d.dao.EXPECT().FindByID(t.Context(), "mem_1").Return(&interfaces.MembershipRow{ID: "mem_1", CompanyID: "cmp_1", UserID: "usr_1", Role: "member"}, nil)
 
 		got, err := d.repo.FindByID(t.Context(), "mem_1")
 		require.NoError(t, err)
@@ -62,7 +62,7 @@ func TestMembershipRepository_FindByID(t *testing.T) {
 
 	t.Run("ShouldReturnError_WhenDAOReturnsNotFound", func(t *testing.T) {
 		d := setupMembershipRepoTest(t)
-		d.dao.EXPECT().FindByID(t.Context(), "mem_404").Return("", "", "", domain.ErrMembershipNotFound)
+		d.dao.EXPECT().FindByID(t.Context(), "mem_404").Return(nil, domain.ErrMembershipNotFound)
 
 		got, err := d.repo.FindByID(t.Context(), "mem_404")
 		require.Error(t, err)
@@ -73,7 +73,7 @@ func TestMembershipRepository_FindByID(t *testing.T) {
 func TestMembershipRepository_FindByCompanyID(t *testing.T) {
 	t.Run("ShouldReturnMemberships_WhenDAOSucceeds", func(t *testing.T) {
 		d := setupMembershipRepoTest(t)
-		rows := []interfaces.MembershipRow{
+		rows := []*interfaces.MembershipRow{
 			{ID: "mem_1", CompanyID: "cmp_1", UserID: "usr_1", Role: "member"},
 			{ID: "mem_2", CompanyID: "cmp_1", UserID: "usr_2", Role: "admin"},
 		}
@@ -100,7 +100,7 @@ func TestMembershipRepository_FindByCompanyID(t *testing.T) {
 func TestMembershipRepository_FindByUserID(t *testing.T) {
 	t.Run("ShouldReturnMemberships_WhenDAOSucceeds", func(t *testing.T) {
 		d := setupMembershipRepoTest(t)
-		rows := []interfaces.MembershipRow{
+		rows := []*interfaces.MembershipRow{
 			{ID: "mem_1", CompanyID: "cmp_1", UserID: "usr_1", Role: "member"},
 		}
 		d.dao.EXPECT().FindByUserID(t.Context(), "usr_1").Return(rows, nil)

@@ -133,13 +133,12 @@ func (mr *MockCompanyDAOMockRecorder) DeleteByID(ctx, id interface{}) *gomock.Ca
 }
 
 // FindByID mocks base method.
-func (m *MockCompanyDAO) FindByID(ctx context.Context, id string) (string, string, error) {
+func (m *MockCompanyDAO) FindByID(ctx context.Context, id string) (*interfaces.CompanyRow, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "FindByID", ctx, id)
-	ret0, _ := ret[0].(string)
-	ret1, _ := ret[1].(string)
-	ret2, _ := ret[2].(error)
-	return ret0, ret1, ret2
+	ret0, _ := ret[0].(*interfaces.CompanyRow)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
 }
 
 // FindByID indicates an expected call of FindByID.

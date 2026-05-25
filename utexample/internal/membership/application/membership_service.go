@@ -36,7 +36,7 @@ func (s *MembershipService) Add(ctx context.Context, companyID, userID, role str
 	if exists {
 		return "", domain.ErrAlreadyMember
 	}
-	m := &domain.Membership{CompanyID: companyID, UserID: userID, Role: role}
+	m := &domain.Membership{CompanyID: companyID, UserID: userID, Role: domain.Role(role)}
 	if err := m.Validate(); err != nil {
 		return "", err
 	}

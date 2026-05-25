@@ -32,9 +32,9 @@ type MembershipRepository interface {
 
 type MembershipDAO interface {
 	Insert(ctx context.Context, companyID, userID, role string) (string, error)
-	FindByID(ctx context.Context, id string) (companyID, userID, role string, err error)
-	FindByCompanyID(ctx context.Context, companyID string) ([]MembershipRow, error)
-	FindByUserID(ctx context.Context, userID string) ([]MembershipRow, error)
+	FindByID(ctx context.Context, id string) (*MembershipRow, error)
+	FindByCompanyID(ctx context.Context, companyID string) ([]*MembershipRow, error)
+	FindByUserID(ctx context.Context, userID string) ([]*MembershipRow, error)
 	ExistsByCompanyAndUser(ctx context.Context, companyID, userID string) (bool, error)
 	DeleteByID(ctx context.Context, id string) error
 }
